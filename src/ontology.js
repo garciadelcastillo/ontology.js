@@ -1,6 +1,3 @@
-
-
-
 var is = function(obj) {
 
     // Sanity
@@ -71,7 +68,7 @@ var is = function(obj) {
 
 
     /**
-     * Checks if object is of type string, number, Noolean, null or undefined
+     * Checks if object is of type string, number, boolean, null or undefined
      * @return {boolean}
      * @ref https://developer.mozilla.org/en-US/docs/Glossary/Primitive
      */
@@ -126,7 +123,7 @@ var is = function(obj) {
     };
 
     /**
-     * Checks if object is not of any of the pecified data types
+     * Checks if object is not of any of the specified data types
      * @param  {string [, ...]} types 
      * @return {boolean} 
      */
@@ -254,7 +251,7 @@ var are = function(obj) {
      * @ref https://developer.mozilla.org/en-US/docs/Glossary/Primitive
      */
     this.primitives = function() {
-        //return this.either('boolean', 'number', 'string', 'null', 'undefined');
+        return this.either('boolean', 'number', 'string', 'null', 'undefined');
     };
 
 
