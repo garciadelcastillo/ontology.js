@@ -47,3 +47,9 @@ are([true, 'foo']).either('number', 'boolean');     // false
 // Is no single object of any of the specified types?
 are([[], {}]).neither('string', 'boolean');         // true
 are([true, 'foo']).neither('number', 'boolean');    // false
+
+
+
+var foo = {a: 5, b: 7};
+var bar = {a: 5, b: 7};
+var baz = {a: 5, b: 7, c: 10};

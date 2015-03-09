@@ -7,9 +7,8 @@ var is = function(obj) {
     };
 
     // Private properties
-    var self = this,
-        arg = obj;  // wouldn't really need this, since obj gets scoped! I <3 JS :)
-    
+    // var self = this,  // DOESN'T WORK, this IS THE WINDOW CONTEXT...
+    //     arg = obj;  // wouldn't really need this, since obj gets scoped! I <3 JS :)
     var typesMap = {
         'null': 'nullObj',
         'undefined': 'undefinedObj',
@@ -22,48 +21,170 @@ var is = function(obj) {
         'object': 'object'
     };
 
+    /**
+     * Internal implementation of deep equality, adapted from Undescore's eq() 1.8.2
+     */
+    var eq = function(a, b, aStack, bStack) {
+        // Identical objects are equal. `0 === -0`, but they aren't identical.
+        // See the [Harmony `egal` proposal](http://wiki.ecmascript.org/doku.php?id=harmony:egal).
+        if (a === b) return a !== 0 || 1 / a === 1 / b;
+        
+        // A strict comparison is necessary because `null == undefined`.
+        if (a == null || b == null) return a === b;
+        
+        // Unwrap any wrapped objects.
+        // if (a instanceof _) a = a._wrapped;
+        // if (b instanceof _) b = b._wrapped;
+        
+        // Compare `[[Class]]` names.
+        var className = toString.call(a);
+        if (className !== toString.call(b)) return false;
+        switch (className) {
+            // Strings, numbers, regular expressions, dates, and booleans are compared by value.
+            case '[object RegExp]':
+            // RegExps are coerced to strings for comparison (Note: '' + /a/i === '/a/i')
+            case '[object String]':
+                // Primitives and their corresponding object wrappers are equivalent; thus, `"5"` is
+                // equivalent to `new String("5")`.
+                return '' + a === '' + b;
+            case '[object Number]':
+                // `NaN`s are equivalent, but non-reflexive.
+                // Object(NaN) is equivalent to NaN
+                if (+a !== +a) return +b !== +b;
+                // An `egal` comparison is performed for other numeric values.
+                return +a === 0 ? 1 / +a === 1 / b : +a === +b;
+            case '[object Date]':
+            case '[object Boolean]':
+                // Coerce dates and booleans to numeric primitive values. Dates are compared by their
+                // millisecond representations. Note that invalid dates with millisecond representations
+                // of `NaN` are not equivalent.
+                return +a === +b;
+        }
+        var areArrays = className === '[object Array]';
+        if (!areArrays) {
+            if (typeof a != 'object' || typeof b != 'object') return false;
+            
+            // Objects with different constructors are not equivalent, but `Object`s or `Array`s
+            // from different frames are.
+            var aCtor = a.constructor, bCtor = b.constructor;
+            // if (aCtor !== bCtor && !(_.isFunction(aCtor) && aCtor instanceof aCtor &&
+            //              _.isFunction(bCtor) && bCtor instanceof bCtor)
+            //         && ('constructor' in a && 'constructor' in b)) {
+            //     return false;
+            // }
+            if (aCtor !== bCtor && !(is(aCtor).function() && aCtor instanceof aCtor &&
+                        is(bCtor).function() && bCtor instanceof bCtor)
+                    && ('constructor' in a && 'constructor' in b)) {
+                return false;
+            }
+        }
+
+
+        // Assume equality for cyclic structures. The algorithm for detecting cyclic
+        // structures is adapted from ES 5.1 section 15.12.3, abstract operation `JO`.
+        // Initializing stack of traversed objects.
+        // It's done here since we only need them for objects and arrays comparison.
+        aStack = aStack || [];
+        bStack = bStack || [];
+        var length = aStack.length;
+        while (length--) {
+            // Linear search. Performance is inversely proportional to the number of
+            // unique nested structures.
+            if (aStack[length] === a) return bStack[length] === b;
+        }
+        // Add the first object to the stack of traversed objects.
+        aStack.push(a);
+        bStack.push(b);
+        // Recursively compare objects and arrays.
+        if (areArrays) {
+            // Compare array lengths to determine if a deep comparison is necessary.
+            length = a.length;
+            if (length !== b.length) return false;
+            // Deep compare the contents, ignoring non-numeric properties.
+            while (length--) {
+                if (!eq(a[length], b[length], aStack, bStack)) return false;
+            }
+        } else {
+            // Deep compare objects.
+            // var keys = _.keys(a), key;
+            var keys = getKeys(a), key;
+            length = keys.length;
+            // Ensure that both objects contain the same number of properties before comparing deep equality.
+            // if (_.keys(b).length !== length) return false;
+            if (getKeys(b).length !== length) return false;
+            while (length--) {
+                // Deep compare each member
+                key = keys[length];
+                // if (!(_.has(b, key) && eq(a[key], b[key], aStack, bStack))) return false;
+                if (!(has(b).property(key) && eq(a[key], b[key], aStack, bStack))) return false;
+            }
+        }
+        
+        // Remove the first object from the stack of traversed objects.
+        aStack.pop();
+        bStack.pop();
+        return true;
+    };
+    // Retrieve the names of an object's own properties.
+    // Delegates to **ECMAScript 5**'s native `Object.keys`
+    var getKeys = function(objct) {
+        //if (!_.isObject(objct)) return [];
+        if (!is(objct).object()) return [];
+        //if (nativeKeys) return nativeKeys(objct);
+        if (Object.keys) return Object.keys(objct);
+        var keys = [];
+        // for (var key in objct) if (_.has(objct, key)) keys.push(key);  
+        for (var key in objct) if (has(objct).property(key)) keys.push(key);  
+        // Ahem, IE < 9.
+        // if (hasEnumBug) collectNonEnumProps(objct, keys);  // JL: not doing IE8 at the moment...
+        return keys;
+    };
+
+    var _is = {};  // the main returned object
+    _is.arg = obj;
 
     /**
      * Underscore's implementations of _.isNull, _isUndefined, _isBoolean...
      */
-    this.nullObj = function() {
-        return arg === null;
+    _is.nullObj = function() {
+        return this.arg === null;
     };
-    this.nul = this.nullObj;  // an alias
+    _is.nul = _is.nullObj;  // an alias
 
-    this.undefinedObj = function() {
-        return arg === void 0;
+    _is.undefinedObj = function() {
+        return this.arg === void 0;
     };
-    this.undef = this.undefinedObj;  // an alias 
+    _is.undef = _is.undefinedObj;  // an alias 
 
-    this.NaNObj = function() {
-        return this.number() && arg !== +arg; 
+    _is.NaNObj = function() {
+        return this.number() && this.arg !== +this.arg; 
     };
-    this.nan = this.NaNObj;  // an alias
+    _is.nan = _is.NaNObj;  // an alias
 
-    this.boolean = function() {
-        return arg === true || arg === false || toString.call(arg) === '[object Boolean]';
-    };
-
-    this.number = function() {
-        return toString.call(arg) === '[object Number]';
+    _is.boolean = function() {
+        return this.arg === true || this.arg === false || 
+            toString.call(this.arg) === '[object Boolean]';
     };
 
-    this.function = function() {
-        return toString.call(arg) === '[object Function]';
+    _is.number = function() {
+        return toString.call(this.arg) === '[object Number]';
     };
 
-    this.string = function() {
-        return toString.call(arg) === '[object String]';
+    _is.function = function() {
+        return toString.call(this.arg) === '[object Function]';
     };
 
-    this.array = function() {
-        if (Array.isArray) return Array.isArray(arg);  // first try ECMAScript 5 native
-        return toString.call(arg) === '[object Array]';  // else compare array
+    _is.string = function() {
+        return toString.call(this.arg) === '[object String]';
     };
 
-    this.object = function() {
-        return Object.prototype.toString.call(arg) === '[object Object]'
+    _is.array = function() {
+        if (Array.isArray) return Array.isArray(this.arg);  // first try ECMAScript 5 native
+        return toString.call(this.arg) === '[object Array]';  // else compare array
+    };
+
+    _is.object = function() {
+        return Object.prototype.toString.call(this.arg) === '[object Object]'
     };
 
 
@@ -72,7 +193,7 @@ var is = function(obj) {
      * @return {boolean}
      * @ref https://developer.mozilla.org/en-US/docs/Glossary/Primitive
      */
-    this.primitive = function() {
+    _is.primitive = function() {
         return this.either('boolean', 'number', 'string', 'null', 'undefined');
     };
 
@@ -81,7 +202,7 @@ var is = function(obj) {
      * @param  {string} type
      * @return {boolean}
      */
-    this.ofType = function(type) {
+    _is.ofType = function(type) {
         if (!typesMap[type]) {
             console.warn('Ontology.js: unrecognized data type "' + type 
                     + '" for is().ofType()');
@@ -91,11 +212,36 @@ var is = function(obj) {
     };
 
     /**
+     * Checks for coerced object equality
+     * @param  {object} other
+     * @return {boolean}
+     * @ref https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Comparison_Operators#Equality_%28.3D.3D%29
+     */
+    _is.equalTo = function(other) {
+        return this.arg == other;
+    };
+
+    /**
+     * Checks for strict equality with no type conversion
+     * @param  {object} other
+     * @return {boolean}
+     * @ref https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Comparison_Operators#Identity_.2F_strict_equality_%28.3D.3D.3D%29
+     */
+    _is.identicalTo = function(other) {
+        return this.arg === other;
+    };
+    _is.strictEqualTo = _is.identicalTo;  // an alias
+
+    _is.deepEqualTo = function(other) {
+        return eq(this.arg, other);
+    };
+
+    /**
      * Checks if the object is not of the specified data type, using string representation
      * @param  {string} type
      * @return {boolean}
      */
-    this.not = function(type) {
+    _is.not = function(type) {
         if (!typesMap[type]) {
             console.warn('Ontology.js: unrecognized data type "' + type 
                     + '" for is().not()');
@@ -109,7 +255,7 @@ var is = function(obj) {
      * @param  {string [, ...]} types 
      * @return {boolean}
      */
-    this.either = function(types) {
+    _is.either = function(types) {
         var a = arguments, len = a.length;
         for (var i = 0; i < len; i++) {
             if (!typesMap[a[i]]) {
@@ -127,7 +273,7 @@ var is = function(obj) {
      * @param  {string [, ...]} types 
      * @return {boolean} 
      */
-    this.neither = function(types) {
+    _is.neither = function(types) {
         var a = arguments, len = a.length;
         for (var i = 0; i < len; i++) {
             if (!typesMap[a[i]]) {
@@ -140,27 +286,28 @@ var is = function(obj) {
         return true;
     };
 
-    return this;
+
+    return _is;
 };
 
 
 
-var are = function(obj) {
+var are = function(objs) {
 
     // Sanity
     if (arguments.length != 1) {
         console.warn('Ontology.js: invalid arguments for are()');
         return undefined;
     };
-    if (!is(obj).array()) {
+    if (!is(objs).array()) {
         console.warn('Ontology.js: must pass an Array as argument for are()');
         return undefined;
     }
 
     // Private properties
-    var self = this,
-        args = obj,
-        len = args.length;
+    // var self = this,
+    //     args = obj,
+    //     len = args.length;
 
     var typesMap = {
         'null': 'nullObjs',
@@ -175,72 +322,74 @@ var are = function(obj) {
     };
 
 
+    var _are = {};  // the main returned object
+    _are.args = objs;
+    var len = objs.length;  // this should probably be deprecated and do this.args.length, in case the user manually reassigns are.args = [...] ?
 
-
-    this.nullObjs = function() {
+    _are.nullObjs = function() {
         for (var i = 0; i < len; i++) {
-            if ( !is(args[i]).nullObj() ) return false;
+            if ( !is(this.args[i]).nullObj() ) return false;
         }
         return true;
     };
-    this.nuls = this.nullObjs;  // alias
-    this.nulls = this.nullObjs;  // alias
+    _are.nuls = _are.nullObjs;  // alias
+    _are.nulls = _are.nullObjs;  // alias
 
-    this.undefinedObjs = function() {
+    _are.undefinedObjs = function() {
         for (var i = 0; i < len; i++) {
-            if ( !is(args[i]).undefinedObj() ) return false;
+            if ( !is(this.args[i]).undefinedObj() ) return false;
         }
         return true;
     };
-    this.undef = this.undefinedObjs;  // an alias 
+    _are.undef = _are.undefinedObjs;  // an alias 
 
-    this.NaNObjs = function() {
+    _are.NaNObjs = function() {
         for (var i = 0; i < len; i++) {
-            if ( !is(args[i]).NaNObj() ) return false;
+            if ( !is(this.args[i]).NaNObj() ) return false;
         }
         return true;
     };
-    this.nans = this.NaNObjs;  // alias
-    this.NaNs = this.NaNObjs;  // alias
+    _are.nans = _are.NaNObjs;  // alias
+    _are.NaNs = _are.NaNObjs;  // alias
 
-    this.booleans = function() {
+    _are.booleans = function() {
         for (var i = 0; i < len; i++) {
-            if ( !is(args[i]).boolean() ) return false;
-        }
-        return true;
-    };
-
-    this.numbers = function() {
-        for (var i = 0; i < len; i++) {
-            if ( !is(args[i]).number() ) return false;
+            if ( !is(this.args[i]).boolean() ) return false;
         }
         return true;
     };
 
-    this.functions = function() {
+    _are.numbers = function() {
         for (var i = 0; i < len; i++) {
-            if ( !is(args[i]).function() ) return false;
+            if ( !is(this.args[i]).number() ) return false;
         }
         return true;
     };
 
-    this.strings = function() {
+    _are.functions = function() {
         for (var i = 0; i < len; i++) {
-            if ( !is(args[i]).string() ) return false;
+            if ( !is(this.args[i]).function() ) return false;
         }
         return true;
     };
 
-    this.arrays = function() {
+    _are.strings = function() {
         for (var i = 0; i < len; i++) {
-            if ( !is(args[i]).array() ) return false;
+            if ( !is(this.args[i]).string() ) return false;
         }
         return true;
     };
 
-    this.objects = function() {
+    _are.arrays = function() {
         for (var i = 0; i < len; i++) {
-            if ( !is(args[i]).object() ) return false;
+            if ( !is(this.args[i]).array() ) return false;
+        }
+        return true;
+    };
+
+    _are.objects = function() {
+        for (var i = 0; i < len; i++) {
+            if ( !is(this.args[i]).object() ) return false;
         }
         return true;
     };
@@ -250,7 +399,7 @@ var are = function(obj) {
      * @return {boolean}
      * @ref https://developer.mozilla.org/en-US/docs/Glossary/Primitive
      */
-    this.primitives = function() {
+    _are.primitives = function() {
         return this.either('boolean', 'number', 'string', 'null', 'undefined');
     };
 
@@ -260,14 +409,14 @@ var are = function(obj) {
      * @param  {string} type
      * @return {boolean}
      */
-    this.ofTypes = function(type) {
+    _are.ofTypes = function(type) {
         if (!typesMap[type]) {
             console.warn('Ontology.js: unrecognized data type "' + type 
                     + '" for are().ofTypes()');
             return false;
         }
         for (var i = 0; i < len; i++) {
-            if ( !is(args[i]).ofType(type) ) return false;
+            if ( !is(this.args[i]).ofType(type) ) return false;
         }
         return true;
     };
@@ -277,14 +426,14 @@ var are = function(obj) {
      * @param  {string} type
      * @return {boolean}
      */
-    this.not = function(type) {
+    _are.not = function(type) {
         if (!typesMap[type]) {
             console.warn('Ontology.js: unrecognized data type "' + type 
                     + '" for are().not()');
             return true;
         }
         for (var i = 0; i < len; i++) {
-            if ( is(args[i]).ofType(type) ) return false;
+            if ( is(this.args[i]).ofType(type) ) return false;
         }
         return true;
     };
@@ -294,7 +443,7 @@ var are = function(obj) {
      * @param  {string [, ...]} types 
      * @return {boolean}
      */
-    this.either = function(types) {
+    _are.either = function(types) {
         var a = arguments, al = a.length;
         for (var i = 0; i < al; i++) {
             if (!typesMap[a[i]]) {
@@ -306,7 +455,7 @@ var are = function(obj) {
         for (var i = 0; i < len; i++) {
             var flag = false;
             for (var j = 0; j < al; j++) {
-                if ( is(args[i]).ofType(a[j]) ) {
+                if ( is(this.args[i]).ofType(a[j]) ) {
                     flag = true;
                     break;
                 }
@@ -321,7 +470,7 @@ var are = function(obj) {
      * @param  {string [, ...]} types 
      * @return {boolean}
      */
-    this.neither = function(types) {
+    _are.neither = function(types) {
         var a = arguments, al = a.length;
         for (var i = 0; i < al; i++) {
             if (!typesMap[a[i]]) {
@@ -333,7 +482,7 @@ var are = function(obj) {
         for (var i = 0; i < len; i++) {
             var flag = false;
             for (var j = 0; j < al; j++) {
-                if ( is(args[i]).ofType(a[j]) ) {
+                if ( is(this.args[i]).ofType(a[j]) ) {
                     flag = true;
                     break;
                 }
@@ -344,6 +493,36 @@ var are = function(obj) {
     };
 
 
+    return _are;
+};
 
-    return this;
+
+
+var has = function(obj) {
+
+    // Sanity
+    if (arguments.length != 1) {
+        console.warn('Ontology.js: invalid arguments for has()');
+        return undefined;
+    };
+
+    // Private properties
+
+
+    var _has = {};  // the main returned object
+    _has.arg = obj;
+
+    /**
+     * From _.has
+     * @param  {string} prop
+     * @return {boolean}
+     */
+    _has.property = function(prop) {
+        return this.arg != null && Object.prototype.hasOwnProperty.call(this.arg, prop);
+    };
+    _has.prop = _has.property;  // alias
+    _has.key = _has.property;   // alias
+
+
+    return _has;
 };
