@@ -6,7 +6,7 @@
 Usage
 -----
 
-**ontology** adds some group methods to your global scope:
+**ontology.js** adds some group methods to your global scope:
 ```javascript
 is(obj);            // for queries at object level (single objects)
 are(objs);          // for queries at array level (arrays of objects)
