@@ -15,8 +15,8 @@ is(1000).primitive();           // true
 is([1, 2]).primitive();         // false, arrays are not considered primitive objects
 
 // Is object type NOT ...?
-is('foo').not('number');        // true
-is({a:5}).not('object');        // false
+is('foo').notType('number');    // true
+is({a:5}).notType('object');    // false
 
 // Is object type EITHER of these ...?
 is([]).either('array', 'object');       // true
@@ -60,8 +60,8 @@ are([true, 'foo']).primitives();        // true
 are([100, {a: 5}]).primitives();        // false
 
 // Is no single object of type ...?
-are([true, 'foo']).not('number');       // true
-are([true, 'foo']).not('string');       // false
+are([true, 'foo']).notType('number');   // true
+are([true, 'foo']).notType('string');   // false
 
 // Is each object of any of the specified types?
 are([true, 'foo']).either('string', 'boolean');     // true
