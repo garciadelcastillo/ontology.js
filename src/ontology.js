@@ -217,7 +217,7 @@ var is = function(obj) {
      * @param  {string} type
      * @return {boolean}
      */
-    _is.not = function(type) {
+    _is.notType = function(type) {
         if (!typesMap[type]) {
             console.warn('Ontology.js: unrecognized data type "' + type 
                     + '" for is().not()');
@@ -459,7 +459,7 @@ var are = function(objs) {
      * @param  {string} type
      * @return {boolean}
      */
-    _are.not = function(type) {
+    _are.notType = function(type) {
         if (!typesMap[type]) {
             console.warn('Ontology.js: unrecognized data type "' + type 
                     + '" for are().not()');
