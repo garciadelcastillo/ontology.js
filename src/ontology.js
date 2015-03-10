@@ -187,7 +187,6 @@ var is = function(obj) {
         return Object.prototype.toString.call(this.arg) === '[object Object]'
     };
 
-
     /**
      * Checks if object is of type string, number, boolean, null or undefined
      * @return {boolean}
@@ -210,31 +209,8 @@ var is = function(obj) {
         }
         return this[typesMap[type]]();
     };
+    _is.type = _is.ofType;  // alias
 
-    /**
-     * Checks for coerced object equality
-     * @param  {object} other
-     * @return {boolean}
-     * @ref https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Comparison_Operators#Equality_%28.3D.3D%29
-     */
-    _is.equalTo = function(other) {
-        return this.arg == other;
-    };
-
-    /**
-     * Checks for strict equality with no type conversion
-     * @param  {object} other
-     * @return {boolean}
-     * @ref https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Comparison_Operators#Identity_.2F_strict_equality_%28.3D.3D.3D%29
-     */
-    _is.identicalTo = function(other) {
-        return this.arg === other;
-    };
-    _is.strictEqualTo = _is.identicalTo;  // an alias
-
-    _is.deepEqualTo = function(other) {
-        return eq(this.arg, other);
-    };
 
     /**
      * Checks if the object is not of the specified data type, using string representation
@@ -286,6 +262,62 @@ var is = function(obj) {
         return true;
     };
 
+    /**
+     * Checks for coerced object equality '=='
+     * @param  {object} other
+     * @return {boolean}
+     * @ref https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Comparison_Operators#Equality_%28.3D.3D%29
+     */
+    _is.equalTo = function(other) {
+        return this.arg == other;
+    };
+    _is.equal = _is.equalTo;  // alias
+
+    /**
+     * Checks for coerced object inequality '!='
+     * @param  {object} other
+     * @return {boolean}
+     * @ref https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Comparison_Operators#Inequality_%28!.3D%29
+     */
+    _is.notEqualTo = function(other) {
+        return this.arg != other;
+    };
+    _is.notEqual = _is.notEqualTo;  // alias
+
+    /**
+     * Checks for strict equality with no type conversion '==='
+     * @param  {object} other
+     * @return {boolean}
+     * @ref https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Comparison_Operators#Identity_.2F_strict_equality_%28.3D.3D.3D%29
+     */
+    _is.identicalTo = function(other) {
+        return this.arg === other;
+    };
+    _is.identical = _is.identicalTo;
+    _is.strictEqualTo = _is.identicalTo;  // alias
+    _is.strictEqual = _is.identicalTo;  // alias
+
+    /**
+     * Checks for strict inequality with no type conversion '!=='
+     * @param  {object} other
+     * @return {boolean}
+     * @ref https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Comparison_Operators#Non-identity_.2F_strict_not_equal_%28!.3D.3D%29
+     */
+    _is.notIdenticalTo = function(other) {
+        return this.arg !== other;
+    };
+    _is.notIdentical = _is.notIdenticalTo
+
+    /**
+     * Implements Underscore's deep equality check
+     * @param  {object} other
+     * @return {boolean}
+     * @ref http://underscorejs.org/docs/underscore.html#section-134
+     */
+    _is.deepIdenticalTo = function(other) {
+        return eq(this.arg, other);
+    };
+    _is.deepIdentical = _is.deepIdenticalTo;  // alias
 
     return _is;
 };
@@ -420,6 +452,7 @@ var are = function(objs) {
         }
         return true;
     };
+    _are.types = _are.ofTypes;  // alias
 
     /**
      * Checks if no one object is of the specified data type, using string representation
@@ -492,6 +525,106 @@ var are = function(objs) {
         return true;
     };
 
+
+    /**
+     * Checks that all objects are equal '=='
+     * @param  {array} others
+     * @return {boolean}
+     * @ref https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Comparison_Operators#Equality_%28.3D.3D%29
+     */
+    _are.equalTo = function(others) {
+        var olen = others.length;
+        if (len != olen) {
+            // console.warn('Ontology.js: arrays with different legths for are().equalTo()');
+            return false;
+        }
+        for (var i = 0; i < len; i++) {
+            if (this.args[i] != others[i]) return false;
+        }
+        return true;
+    };
+    _are.equal = _are.equalTo;
+
+    /**
+     * Checks if ALL OBJECTS are not equal '!='. 
+     * Returns false if any two are equal.
+     * This behavior is opposed to checking if any two objects are unequal, 
+     *     which is implied in !are().equal()
+     * @param  {array} others
+     * @return {boolean}
+     * @ref https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Comparison_Operators#Inequality_%28!.3D%29
+     */
+    _are.notEqualTo = function(others) {
+        var olen = others.length;
+        if (len != olen) {
+            // console.warn('Ontology.js: arrays with different legths for are().notEqualTo()');
+            return true;
+        }
+        for (var i = 0; i < len; i++) {
+            if (this.args[i] == others[i]) return false;
+        }
+        return true;
+    };
+    _are.notEqual = _are.notEqualTo;  // alias
+
+
+    /**
+     * Checks for strict equality with no type conversion '==='
+     * @param  {array} others
+     * @return {boolean}
+     * @ref https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Comparison_Operators#Identity_.2F_strict_equality_%28.3D.3D.3D%29
+     */
+    _are.identicalTo = function(others) {
+        var olen = others.length;
+        if (len != olen) {
+            return false;
+        }
+        for (var i = 0; i < len; i++) {
+            if (this.args[i] !== others[i]) return false;
+        }
+        return true;
+    };
+    _are.identical = _are.identicalTo;  // alias
+
+    /**
+     * Checks if ALL OBJECTS are not identical '!=='. 
+     * Returns false if any two are.
+     * This behavior is opposed to checking if any two objects are not identical, 
+     *     which is implied in !are().identical()
+     * @param  {array} others
+     * @return {boolean}
+     * @ref https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Comparison_Operators#Non-identity_.2F_strict_not_equal_%28!.3D.3D%29
+     */
+    _are.notIdenticalTo = function(others) {
+        var olen = others.length;
+        if (len != olen) {
+            return true;
+        }
+        for (var i = 0; i < len; i++) {
+            if (this.args[i] === others[i]) return false;
+        }
+        return true;
+    };
+    _are.notIdentical = _are.notIdenticalTo;  // alias
+
+    /**
+     * Checks if ALL OBJECTS are deeply identical
+     * Implements Underscore's deep equality check
+     * @param  {array} others
+     * @return {boolean}
+     * @ref http://underscorejs.org/docs/underscore.html#section-134
+     */
+    _are.deepIdenticalTo = function(others) {
+        var olen = others.length;
+        if (len != olen) {
+            return false;
+        }
+        for (var i = 0; i < len; i++) {
+            if (!is(this.args[i]).deepIdenticalTo(others[i])) return false;
+        }
+        return true;
+    };
+    _are.deepIdentical = _are.deepIdenticalTo;  // alias
 
     return _are;
 };
