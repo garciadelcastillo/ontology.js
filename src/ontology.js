@@ -174,7 +174,11 @@ var is = function(obj) {
         return this.arg === true || this.arg === false || 
             toString.call(this.arg) === '[object Boolean]';
     };
-
+    /**
+     * This implementation included NaN, which is a JS native behavior:
+     * @ref http://stackoverflow.com/a/2801617/1934487
+     * @return {boolean}
+     */
     _is.number = function() {
         return toString.call(this.arg) === '[object Number]';
     };
@@ -730,3 +734,28 @@ var have = function(objs) {
 
     return _have;
 };
+
+
+
+
+
+// ███████╗██╗  ██╗██████╗  ██████╗ ██████╗ ████████╗
+// ██╔════╝╚██╗██╔╝██╔══██╗██╔═══██╗██╔══██╗╚══██╔══╝
+// █████╗   ╚███╔╝ ██████╔╝██║   ██║██████╔╝   ██║   
+// ██╔══╝   ██╔██╗ ██╔═══╝ ██║   ██║██╔══██╗   ██║   
+// ███████╗██╔╝ ██╗██║     ╚██████╔╝██║  ██║   ██║   
+// ╚══════╝╚═╝  ╚═╝╚═╝      ╚═════╝ ╚═╝  ╚═╝   ╚═╝   
+
+// browser context
+if ( typeof exports != 'object' || exports === undefined ) {
+    // we are good
+
+// node.js context
+} else {
+    var ont = module.exports = {};
+
+    ont.is = is;
+    ont.are = are;
+    ont.has = has;
+    ont.have = have;
+}
