@@ -49,8 +49,6 @@ is({a: 5, c: true})
     .deepIdentical({a: 5, c: 1});       // false
 
 
-
-
 // Generic type checks for arrays of objects
 are([-1, 1]).types('number');         // true
 are([true, 'foo']).types('string');   // false
