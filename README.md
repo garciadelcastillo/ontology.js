@@ -10,15 +10,23 @@ Usage
 ```javascript
 is(obj);            // for queries at object level (single objects)
 are(objs);          // for queries at array level (arrays of objects)
+has(obj);			// for queries on object properties
+have(objs);			// for queries on object properties at array level 
 ```
 
 These objects return a scoped selection that can be further queried with chained methods, returning the evaluated expression:
 ```javascript
-is(10000).ofType('number');             // true
-is('foo').ofType('boolean');            // false
+is(10000).type('number');         	 		   // true
+is('foo').type('boolean');         	 		   // false
 
-are([-1, 1]).ofTypes('number');         // true
-are([true, 'foo']).ofTypes('string');   // false
+are([-1, 1]).types('number');        		 	// true
+are([true, 'foo']).types('string');  		 	// false
+
+has({foo: true}).property('foo');				// true
+has({foo: true}).property('bar');				// false
+
+have([{foo: 1}, {foo: 2}]).property('foo');		// true
+have([{foo: 1}, {bar: 2}]).property('foo');		// false
 ```
 
 And this is pretty much it. The rest you can figure out from the following examples:
@@ -114,5 +122,14 @@ are([1, 2]).notIdentical([1, 2, 3]);            // false, arrays have different 
 // Is every object deeply identical?
 are([{a: 5}, {b: false}])
     .deepIdentical([{a: 5}, {b: 0}]);         // false
+
+
+// Has object ownProperty? 
+has({a: 0}).property('a');			// true
+has([0, 1]).property('length');		// true
+
+// Has each object this ownProperty?
+have([{a:5}, {a:7}]).prop('a');		// true
+have([{a:5}, {b:7}]).prop('a');		// false
 ```
 

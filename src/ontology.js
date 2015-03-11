@@ -646,7 +646,7 @@ var has = function(obj) {
     _has.arg = obj;
 
     /**
-     * From _.has
+     * From Underscore's _.has
      * @param  {string} prop
      * @return {boolean}
      */
@@ -658,4 +658,43 @@ var has = function(obj) {
 
 
     return _has;
+};
+
+
+
+var have = function(objs) {
+
+    // Sanity
+    if (arguments.length != 1) {
+        console.warn('Ontology.js: invalid arguments for have()');
+        return undefined;
+    };
+    if (!is(objs).array()) {
+        console.warn('Ontology.js: must pass an Array as argument for have()');
+        return undefined;
+    };
+
+    // Private properties
+    var _have = {};  // the main returned object
+    _have.args = objs;
+    var len = objs.length;  // this should probably be deprecated and do this.args.length, in case the user manually reassigns are.args = [...] ?
+
+    /**
+     * Checks if EACH OBJECT has the passed own property
+     * From Underscore's _.has
+     * @param  {string} prop
+     * @return {boolean}
+     */
+    _have.property = function(prop) {
+        for (var i = 0; i < len; i++) {
+            if (this.args[i] == null || !Object.prototype.hasOwnProperty.call(this.args[i], prop)) 
+                return false;
+        }
+        return true;
+    };
+    _have.prop = _have.property;  // alias
+    _have.key = _have.property;   // alias
+
+
+    return _have;
 };

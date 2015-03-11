@@ -90,6 +90,13 @@ are([{a: 5}, {b: false}])
     .deepIdentical([{a: 5}, {b: 0}]);         // false
 
 
+// Has object ownProperty? 
+has({a: 0}).property('a');			// true
+has([0, 1]).property('length');		// true
+
+// Has each object this ownProperty?
+have([{a:5}, {a:7}]).prop('a');		// true
+have([{a:5}, {b:7}]).prop('a');		// false
 
 
 
