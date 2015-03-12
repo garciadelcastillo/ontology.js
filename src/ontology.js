@@ -676,6 +676,7 @@ var has = function(obj) {
     _has.arg = obj;
 
     /**
+     * Checks if object has own property
      * From Underscore's _.has
      * @param  {string} prop
      * @return {boolean}
