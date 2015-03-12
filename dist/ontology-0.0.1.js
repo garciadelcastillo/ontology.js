@@ -230,7 +230,7 @@ var is = function(obj) {
      * @param  {string} type
      * @return {boolean}
      */
-    _is.notType = function(type) {
+    _is.notOfType = function(type) {
         if (!typesMap[type]) {
             console.warn('Ontology.js: unrecognized data type "' + type 
                     + '" for is().not()');
@@ -238,6 +238,7 @@ var is = function(obj) {
         }
         return !this[typesMap[type]]();
     };
+    _is.notType = _is.notOfType;
 
     /**
      * Checks if object is of any of the specified data types
@@ -448,7 +449,7 @@ var are = function(objs) {
     };
 
     /**
-     * Checks if objects are either string, number, Noolean, null or undefined
+     * Checks if objects are either string, number, boolean, null or undefined
      * @return {boolean}
      * @ref https://developer.mozilla.org/en-US/docs/Glossary/Primitive
      */
@@ -462,7 +463,7 @@ var are = function(objs) {
      * @param  {string} type
      * @return {boolean}
      */
-    _are.ofTypes = function(type) {
+    _are.ofType = function(type) {
         if (!typesMap[type]) {
             console.warn('Ontology.js: unrecognized data type "' + type 
                     + '" for are().ofTypes()');
@@ -473,14 +474,14 @@ var are = function(objs) {
         }
         return true;
     };
-    _are.types = _are.ofTypes;  // alias
+    _are.type = _are.ofType;  // alias
 
     /**
      * Checks if no one object is of the specified data type, using string representation
      * @param  {string} type
      * @return {boolean}
      */
-    _are.notType = function(type) {
+    _are.notOfType = function(type) {
         if (!typesMap[type]) {
             console.warn('Ontology.js: unrecognized data type "' + type 
                     + '" for are().not()');
@@ -491,6 +492,7 @@ var are = function(objs) {
         }
         return true;
     };
+    _are.notType = _are.notOfType;
 
     /**
      * Checks if each object is of any of the specified data types
@@ -674,6 +676,7 @@ var has = function(obj) {
     _has.arg = obj;
 
     /**
+     * Checks if object has own property
      * From Underscore's _.has
      * @param  {string} prop
      * @return {boolean}
