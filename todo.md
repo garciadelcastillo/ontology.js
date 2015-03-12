@@ -18,5 +18,5 @@
     // it could be broken down like:
     var areValues = are(array).prop(key);
     areValues.equal(comp);
-```javascript
+```
 
