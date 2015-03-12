@@ -4,7 +4,7 @@
 
     - for **is** and **are**, implement greaterThan, lessThan, greaterOrEqualThan, lessOrEqualThan
     - for **has** and **have**, implement something that check of a particular property is equal to a value: 
-```javascript
+
         are(array).prop(key).equal(comp);  // checks if property 'key' in all object is equal to 'comp'
 
         // this would be equal to:
@@ -18,4 +18,3 @@
         // it could be broken down like:
         var areValues = are(array).prop(key);
         areValues.equal(comp);
-```javascript
