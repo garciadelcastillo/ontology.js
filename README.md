@@ -29,7 +29,7 @@ have([{foo: 1}, {foo: 2}]).property('foo');		// true
 have([{foo: 1}, {bar: 2}]).property('foo');		// false
 ```
 
-And this is pretty much it. The rest you can figure out from the following examples:
+And this is pretty much it. The rest you can figure out from the following examples. The [tests.js file](https://github.com/garciadelcastillo/ontology.js/blob/master/test/tests.js) is also a very good resource to view detailed implementation examples.
 
 ```javascript
 // Generic type check, passing data type as string representation
@@ -84,8 +84,8 @@ is({a: 5, c: true})
 
 
 // Generic type checks for arrays of objects
-are([-1, 1]).types('number');         // true
-are([true, 'foo']).types('string');   // false
+are([-1, 1]).type('number');         // true
+are([true, 'foo']).type('string');   // false
 
 // Primitive type checks for arrays of objects
 are([true, 'foo']).primitives();        // true
@@ -131,5 +131,6 @@ has([0, 1]).property('length');		// true
 // Has each object this ownProperty?
 have([{a:5}, {a:7}]).prop('a');		// true
 have([{a:5}, {b:7}]).prop('a');		// false
+
 ```
 
