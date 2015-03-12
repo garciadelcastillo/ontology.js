@@ -5,6 +5,15 @@ var should = require('should'),
 
 
 
+// ██╗███████╗
+// ██║██╔════╝
+// ██║███████╗
+// ██║╚════██║
+// ██║███████║
+// ╚═╝╚══════╝
+
+
+
 // ██████╗  █████╗ ███████╗██╗ ██████╗    ████████╗██╗   ██╗██████╗ ███████╗███████╗
 // ██╔══██╗██╔══██╗██╔════╝██║██╔════╝    ╚══██╔══╝╚██╗ ██╔╝██╔══██╗██╔════╝██╔════╝
 // ██████╔╝███████║███████╗██║██║            ██║    ╚████╔╝ ██████╔╝█████╗  ███████╗
@@ -648,7 +657,7 @@ describe("is().ofType()", function() {
 });
 
 
-describe("is().notType()", function() {
+describe("is().notOfType()", function() {
 
   it('returns correct result', function() {
 
@@ -668,7 +677,7 @@ describe("is().notType()", function() {
     //     'object': 'object'
     // };
 
-    var fun = 'notType';
+    var fun = 'notOfType';
 
     // null
     should.equal( false, ont.is( null )[fun]( 'null' ) );
@@ -1078,6 +1087,550 @@ describe("is().deepIdenticalTo()", function() {
     should.equal( false, ont.is( a )[fun]( k ) );
     should.equal(  true, ont.is( k )[fun]( l ) );
     should.equal( false, ont.is( l )[fun]( m ) );
+
+  });
+
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+//  █████╗ ██████╗ ███████╗
+// ██╔══██╗██╔══██╗██╔════╝
+// ███████║██████╔╝█████╗  
+// ██╔══██║██╔══██╗██╔══╝  
+// ██║  ██║██║  ██║███████╗
+// ╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝
+
+
+
+
+// ██████╗  █████╗ ███████╗██╗ ██████╗    ████████╗██╗   ██╗██████╗ ███████╗███████╗
+// ██╔══██╗██╔══██╗██╔════╝██║██╔════╝    ╚══██╔══╝╚██╗ ██╔╝██╔══██╗██╔════╝██╔════╝
+// ██████╔╝███████║███████╗██║██║            ██║    ╚████╔╝ ██████╔╝█████╗  ███████╗
+// ██╔══██╗██╔══██║╚════██║██║██║            ██║     ╚██╔╝  ██╔═══╝ ██╔══╝  ╚════██║
+// ██████╔╝██║  ██║███████║██║╚██████╗       ██║      ██║   ██║     ███████╗███████║
+// ╚═════╝ ╚═╝  ╚═╝╚══════╝╚═╝ ╚═════╝       ╚═╝      ╚═╝   ╚═╝     ╚══════╝╚══════╝
+
+describe("are().nullObjs()", function() {
+
+  it('returns correct result', function() {
+
+    var fun = 'nullObjs';
+
+    should.equal(  true, ont.are( [null, null] )[fun]() );
+    should.equal( false, ont.are( [null, undefined] )[fun]() );
+    should.equal( false, ont.are( ['null'] )[fun]() );
+    should.equal( false, ont.are( [0] )[fun]() );
+    should.equal( false, ont.are( [false] )[fun]() );
+
+  });
+
+});
+
+describe("are().undefinedObjs()", function() {
+
+  it('returns correct result', function() {
+
+    var fun = 'undefinedObjs';
+
+    should.equal(  true, ont.are( [undefined, undefined] )[fun]() );
+    should.equal( false, ont.are( [null, undefined] )[fun]() );
+    should.equal( false, ont.are( ['undefined'] )[fun]() );
+    should.equal( false, ont.are( [0] )[fun]() );
+    should.equal( false, ont.are( [false] )[fun]() );
+
+  });
+
+});
+
+describe("are().NaNObjs()", function() {
+
+  it('returns correct result', function() {
+
+    var fun = 'NaNObjs';
+
+    should.equal(  true, ont.are( [NaN, NaN] )[fun]() );
+    should.equal( false, ont.are( [NaN, undefined] )[fun]() );
+    should.equal( false, ont.are( ['NaN'] )[fun]() );
+    should.equal( false, ont.are( [0] )[fun]() );
+    should.equal( false, ont.are( [false] )[fun]() );
+
+  });
+
+});
+
+describe("are().booleans()", function() {
+
+  it('returns correct result', function() {
+
+    var fun = 'booleans';
+
+    should.equal(  true, ont.are( [true, false] )[fun]() );
+    should.equal( false, ont.are( [true, undefined] )[fun]() );
+    should.equal( false, ont.are( ['true'] )[fun]() );
+    should.equal( false, ont.are( [0] )[fun]() );
+
+  });
+
+});
+
+describe("are().numbers()", function() {
+
+  it('returns correct result', function() {
+
+    var fun = 'numbers';
+
+    should.equal(  true, ont.are( [0, 1] )[fun]() );
+    should.equal( false, ont.are( [0, '1'] )[fun]() );
+    should.equal( false, ont.are( ['1'] )[fun]() );
+
+  });
+
+});
+
+describe("are().functions()", function() {
+
+  it('returns correct result', function() {
+
+    var fun = 'functions';
+
+    should.equal(  true, ont.are( [ function(){}, function(){} ] )[fun]() );
+    should.equal( false, ont.are( [ function(){}, 'function' ] )[fun]() );
+    should.equal(  true, ont.are( [ describe ] )[fun]() );
+
+  });
+
+});
+
+describe("are().strings()", function() {
+
+  it('returns correct result', function() {
+
+    var fun = 'strings';
+
+    should.equal(  true, ont.are( [ 'foo', 'bar' ] )[fun]() );
+    should.equal( false, ont.are( [ 'foo', true ] )[fun]() );
+
+  });
+
+});
+
+describe("are().arrays()", function() {
+
+  it('returns correct result', function() {
+
+    var fun = 'arrays';
+
+    should.equal(  true, ont.are( [ [], [] ] )[fun]() );
+    should.equal( false, ont.are( [ [], {} ] )[fun]() );
+
+  });
+
+});
+
+describe("are().objects()", function() {
+
+  it('returns correct result', function() {
+
+    var fun = 'objects';
+
+    should.equal(  true, ont.are( [ {}, {} ] )[fun]() );
+    should.equal( false, ont.are( [ [], {} ] )[fun]() );
+
+  });
+
+});
+
+
+// ██████╗ ██████╗ ██╗███╗   ███╗██╗████████╗██╗██╗   ██╗███████╗
+// ██╔══██╗██╔══██╗██║████╗ ████║██║╚══██╔══╝██║██║   ██║██╔════╝
+// ██████╔╝██████╔╝██║██╔████╔██║██║   ██║   ██║██║   ██║█████╗  
+// ██╔═══╝ ██╔══██╗██║██║╚██╔╝██║██║   ██║   ██║╚██╗ ██╔╝██╔══╝  
+// ██║     ██║  ██║██║██║ ╚═╝ ██║██║   ██║   ██║ ╚████╔╝ ███████╗
+// ╚═╝     ╚═╝  ╚═╝╚═╝╚═╝     ╚═╝╚═╝   ╚═╝   ╚═╝  ╚═══╝  ╚══════╝
+describe("are().primitives()", function() {
+
+  it('returns correct result', function() {
+
+    var fun = 'primitives';
+
+    should.equal(  true, ont.are( [ false, 0, NaN, '0', null, undefined ] )[fun]() );
+    should.equal( false, ont.are( [ false, 0, NaN, '0', null, undefined, {} ] )[fun]() );
+    should.equal( false, ont.are( [ false, 0, NaN, '0', null, undefined, [] ] )[fun]() );
+
+  });
+
+});
+
+
+//  ██████╗ ███████╗████████╗██╗   ██╗██████╗ ███████╗
+// ██╔═══██╗██╔════╝╚══██╔══╝╚██╗ ██╔╝██╔══██╗██╔════╝
+// ██║   ██║█████╗     ██║    ╚████╔╝ ██████╔╝█████╗  
+// ██║   ██║██╔══╝     ██║     ╚██╔╝  ██╔═══╝ ██╔══╝  
+// ╚██████╔╝██║        ██║      ██║   ██║     ███████╗
+//  ╚═════╝ ╚═╝        ╚═╝      ╚═╝   ╚═╝     ╚══════╝
+describe("are().ofType()", function() {
+
+  it('returns correct result', function() {
+
+    var fun = 'ofType';
+
+    // remember:
+    // var typesMap = {
+    //     'null': 'nullObj',
+    //     'undefined': 'undefinedObj',
+    //     'nan': 'NaNObj',
+    //     'boolean': 'boolean',
+    //     'number': 'number',
+    //     'function': 'function',
+    //     'string': 'string',
+    //     'array': 'array',
+    //     'object': 'object'
+    // };
+
+    should.equal(  true, ont.are( [ null, null ] )[fun]( 'null' ) );
+    should.equal( false, ont.are( [ null, undefined ] )[fun]( 'null' ) );
+
+    should.equal(  true, ont.are( [ undefined, undefined ] )[fun]( 'undefined' ) );
+    should.equal( false, ont.are( [ null, undefined ] )[fun]( 'undefined' ) );
+
+    should.equal(  true, ont.are( [ NaN, NaN ] )[fun]( 'nan' ) );
+    should.equal( false, ont.are( [ NaN, 1 ] )[fun]( 'nan' ) );
+
+    should.equal(  true, ont.are( [ true, false ] )[fun]( 'boolean' ) );
+    should.equal( false, ont.are( [ true, 'true' ] )[fun]( 'boolean' ) );
+
+    should.equal(  true, ont.are( [ 0, 1, NaN ] )[fun]( 'number' ) );
+    should.equal( false, ont.are( [ 0, 1, '2' ] )[fun]( 'number' ) );
+
+    should.equal(  true, ont.are( [ describe, function(){} ] )[fun]( 'function' ) );
+    should.equal( false, ont.are( [ describe, {} ] )[fun]( 'function' ) );
+
+    should.equal(  true, ont.are( [ 'foo', 'bar' ] )[fun]( 'string' ) );
+    should.equal( false, ont.are( [ 'foo', null ] )[fun]( 'string' ) );
+
+    should.equal(  true, ont.are( [ [], [] ] )[fun]( 'array' ) );
+    should.equal( false, ont.are( [ [], {} ] )[fun]( 'array' ) );
+
+    should.equal(  true, ont.are( [ {}, {} ] )[fun]( 'object' ) );
+    should.equal( false, ont.are( [ [], {} ] )[fun]( 'object' ) );
+
+  });
+
+});
+
+describe("are().notOfType()", function() {
+
+  it('returns correct result', function() {
+
+    // no one object should be of the specified type
+    var fun = 'notOfType';
+
+    should.equal(  true, ont.are( [ undefined, undefined ] )[fun]( 'null' ) );
+    should.equal( false, ont.are( [ null, undefined ] )[fun]( 'null' ) );
+
+    should.equal(  true, ont.are( [ null, null ] )[fun]( 'undefined' ) );
+    should.equal( false, ont.are( [ null, undefined ] )[fun]( 'undefined' ) );
+
+    should.equal(  true, ont.are( [ 0, 1 ] )[fun]( 'nan' ) );
+    should.equal( false, ont.are( [ NaN, 1 ] )[fun]( 'nan' ) );
+
+    should.equal(  true, ont.are( [ 'true', 'false' ] )[fun]( 'boolean' ) );
+    should.equal( false, ont.are( [ true, 'true' ] )[fun]( 'boolean' ) );
+
+    should.equal(  true, ont.are( [ '0', '1' ] )[fun]( 'number' ) );
+    should.equal( false, ont.are( [ 0, 1, '2' ] )[fun]( 'number' ) );
+
+    should.equal(  true, ont.are( [ 0, 'function' ] )[fun]( 'function' ) );
+    should.equal( false, ont.are( [ describe, {} ] )[fun]( 'function' ) );
+
+    should.equal(  true, ont.are( [ [], {} ] )[fun]( 'string' ) );
+    should.equal( false, ont.are( [ 'foo', null ] )[fun]( 'string' ) );
+
+    should.equal(  true, ont.are( [ {}, {} ] )[fun]( 'array' ) );
+    should.equal( false, ont.are( [ [], {} ] )[fun]( 'array' ) );
+
+    should.equal(  true, ont.are( [ [], [] ] )[fun]( 'object' ) );
+    should.equal( false, ont.are( [ [], {} ] )[fun]( 'object' ) );
+
+  });
+
+});
+
+
+// ███████╗██╗████████╗██╗  ██╗███████╗██████╗ 
+// ██╔════╝██║╚══██╔══╝██║  ██║██╔════╝██╔══██╗
+// █████╗  ██║   ██║   ███████║█████╗  ██████╔╝
+// ██╔══╝  ██║   ██║   ██╔══██║██╔══╝  ██╔══██╗
+// ███████╗██║   ██║   ██║  ██║███████╗██║  ██║
+// ╚══════╝╚═╝   ╚═╝   ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝
+describe("are().either()", function() {
+
+  it('returns correct result', function() {
+
+    var fun = 'either';
+
+    // Checks if each object is of any of the specified data types
+    should.equal(  true, ont.are( [ null, null ] )[fun]( 'null', 'undefined' ) );
+    should.equal(  true, ont.are( [ null, undefined ] )[fun]( 'null', 'undefined' ) );
+    should.equal( false, ont.are( [ null, 1 ] )[fun]( 'null', 'undefined' ) );
+
+  });
+
+});
+
+describe("are().neither()", function() {
+
+  it('returns correct result', function() {
+
+    var fun = 'neither';
+
+    // Checks that no object is of any of the specified data types
+    should.equal( false, ont.are( [ null, null ] )[fun]( 'null', 'undefined' ) );
+    should.equal( false, ont.are( [ null, undefined ] )[fun]( 'null', 'undefined' ) );
+    should.equal( false, ont.are( [ null, 1 ] )[fun]( 'null', 'undefined' ) );
+    should.equal(  true, ont.are( [ 0, 1 ] )[fun]( 'null', 'undefined' ) );
+
+  });
+
+});
+
+
+// ███████╗ ██████╗ ██╗   ██╗ █████╗ ██╗     ██╗████████╗██╗   ██╗
+// ██╔════╝██╔═══██╗██║   ██║██╔══██╗██║     ██║╚══██╔══╝╚██╗ ██╔╝
+// █████╗  ██║   ██║██║   ██║███████║██║     ██║   ██║    ╚████╔╝ 
+// ██╔══╝  ██║▄▄ ██║██║   ██║██╔══██║██║     ██║   ██║     ╚██╔╝  
+// ███████╗╚██████╔╝╚██████╔╝██║  ██║███████╗██║   ██║      ██║   
+// ╚══════╝ ╚══▀▀═╝  ╚═════╝ ╚═╝  ╚═╝╚══════╝╚═╝   ╚═╝      ╚═╝  
+describe("are().equalTo()", function() {
+
+  it('returns correct result', function() {
+
+    var fun = 'equalTo';
+
+    // Checks that all objects are equal '=='
+    should.equal(  true, ont.are( [ 0, 1 ] )[fun]( [ 0, 1 ] ) );
+    should.equal(  true, ont.are( [ 0, 1 ] )[fun]( [ false, true ] ) );
+    should.equal( false, ont.are( [ 0, 1 ] )[fun]( [ 0, 2 ] ) );
+    should.equal( false, ont.are( [ 0, 1 ] )[fun]( [ 0, 1, 2 ] ) );
+
+  });
+
+});
+
+describe("are().notEqualTo()", function() {
+
+  it('returns correct result', function() {
+
+    var fun = 'notEqualTo';
+
+    // Checks if ALL OBJECTS are not equal '!='. 
+    should.equal(  true, ont.are( [ 0, 1 ] )[fun]( [ 2, 3 ] ) );
+    should.equal(  true, ont.are( [ 0, 1 ] )[fun]( [ 1, 0 ] ) );
+    should.equal(  true, ont.are( [ 0, 1 ] )[fun]( [ 0, 1, 2 ] ) );
+    should.equal( false, ont.are( [ 0, 1 ] )[fun]( [ 0, 2 ] ) );
+    should.equal( false, ont.are( [ 0, 1 ] )[fun]( [ 0, 1 ] ) );
+    should.equal( false, ont.are( [ 0, 1 ] )[fun]( [ false, true ] ) );
+
+  });
+
+});
+
+
+// ███████╗████████╗██████╗ ██╗ ██████╗    ███████╗ ██████╗ ██╗   ██╗ █████╗ ██╗     ██╗████████╗██╗   ██╗
+// ██╔════╝╚══██╔══╝██╔══██╗██║██╔════╝    ██╔════╝██╔═══██╗██║   ██║██╔══██╗██║     ██║╚══██╔══╝╚██╗ ██╔╝
+// ███████╗   ██║   ██████╔╝██║██║         █████╗  ██║   ██║██║   ██║███████║██║     ██║   ██║    ╚████╔╝ 
+// ╚════██║   ██║   ██╔══██╗██║██║         ██╔══╝  ██║▄▄ ██║██║   ██║██╔══██║██║     ██║   ██║     ╚██╔╝  
+// ███████║   ██║   ██║  ██║██║╚██████╗    ███████╗╚██████╔╝╚██████╔╝██║  ██║███████╗██║   ██║      ██║   
+// ╚══════╝   ╚═╝   ╚═╝  ╚═╝╚═╝ ╚═════╝    ╚══════╝ ╚══▀▀═╝  ╚═════╝ ╚═╝  ╚═╝╚══════╝╚═╝   ╚═╝      ╚═╝   
+describe("are().identicalTo()", function() {
+
+  it('returns correct result', function() {
+
+    var fun = 'identicalTo';
+
+    // Checks for strict equality with no type conversion '==='
+    should.equal(  true, ont.are( [ 0, 1 ] )[fun]( [ 0, 1 ] ) );
+    should.equal( false, ont.are( [ 0, 1 ] )[fun]( [ 0, true ] ) );
+    should.equal( false, ont.are( [ 0, 1 ] )[fun]( [ 0, '1' ] ) );
+    should.equal( false, ont.are( [ 0, 1 ] )[fun]( [ 0, 1, 2 ] ) );
+
+  });
+
+});
+
+describe("are().notIdenticalTo()", function() {
+
+  it('returns correct result', function() {
+
+    var fun = 'notIdenticalTo';
+
+    // Checks if ALL OBJECTS are not identical '!=='. 
+    should.equal(  true, ont.are( [ 0, 1 ] )[fun]( [ 2, 3 ] ) );
+    should.equal(  true, ont.are( [ 0, 1 ] )[fun]( [ 1, 0 ] ) );
+    should.equal(  true, ont.are( [ 0, 1 ] )[fun]( [ '0', '1' ] ) );
+    should.equal(  true, ont.are( [ 0, 1 ] )[fun]( [ false, true ] ) );
+    should.equal(  true, ont.are( [ 0, 1 ] )[fun]( [ 0, 1, 2 ] ) );
+    should.equal( false, ont.are( [ 0, 1 ] )[fun]( [ 0, 1 ] ) );
+    should.equal( false, ont.are( [ 0, 1 ] )[fun]( [ 0, 2 ] ) );
+    should.equal( false, ont.are( [ 0, 1 ] )[fun]( [ 0, '1' ] ) );
+
+  });
+
+});
+
+
+// ██████╗ ███████╗███████╗██████╗     ███████╗ ██████╗ ██╗   ██╗ █████╗ ██╗     ██╗████████╗██╗   ██╗
+// ██╔══██╗██╔════╝██╔════╝██╔══██╗    ██╔════╝██╔═══██╗██║   ██║██╔══██╗██║     ██║╚══██╔══╝╚██╗ ██╔╝
+// ██║  ██║█████╗  █████╗  ██████╔╝    █████╗  ██║   ██║██║   ██║███████║██║     ██║   ██║    ╚████╔╝ 
+// ██║  ██║██╔══╝  ██╔══╝  ██╔═══╝     ██╔══╝  ██║▄▄ ██║██║   ██║██╔══██║██║     ██║   ██║     ╚██╔╝  
+// ██████╔╝███████╗███████╗██║         ███████╗╚██████╔╝╚██████╔╝██║  ██║███████╗██║   ██║      ██║   
+// ╚═════╝ ╚══════╝╚══════╝╚═╝         ╚══════╝ ╚══▀▀═╝  ╚═════╝ ╚═╝  ╚═╝╚══════╝╚═╝   ╚═╝      ╚═╝   
+describe("are().deepIdenticalTo()", function() {
+
+  it('returns correct result', function() {
+
+    var fun = 'deepIdenticalTo';
+
+    var a = {a: 0, b: 1, c: 2},
+        b = {a: 0, b: 1, c: 2},
+        c = {a: 0, b: 1, c: 3},
+        d = {a: 0, b: 1},
+        e = {a: false, b: 1, c: 2},
+        f = [0, 1, 2],
+        g = [0, 1, 2],
+        h = [0, 1, [0, 1]],
+        i = [0, 1, [0, 1]],
+        j = [0, 1, [0, 2]],
+        k = {a: 0, b: 1, c: [0, 1]},
+        l = {a: 0, b: 1, c: [0, 1]},
+        m = {a: 0, b: 1, c: [0, 2]};
+
+    should.equal(  true, ont.are( [ a, b ] )[fun]( [ a, b ] ) );
+    should.equal(  true, ont.are( [ b, a ] )[fun]( [ a, b ] ) );
+    should.equal(  true, ont.are( [ a, f, k ] )[fun]( [ b, g, l ] ) );
+    should.equal( false, ont.are( [ a, b ] )[fun]( [ a, c ] ) );
+    should.equal( false, ont.are( [ a, b ] )[fun]( [ a, f ] ) );
+    
+  });
+
+});
+
+
+
+
+
+
+
+
+
+
+
+
+// ██╗  ██╗ █████╗ ███████╗
+// ██║  ██║██╔══██╗██╔════╝
+// ███████║███████║███████╗
+// ██╔══██║██╔══██║╚════██║
+// ██║  ██║██║  ██║███████║
+// ╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝
+
+
+
+// ██████╗ ██████╗  ██████╗ ██████╗ ███████╗██████╗ ████████╗██╗   ██╗
+// ██╔══██╗██╔══██╗██╔═══██╗██╔══██╗██╔════╝██╔══██╗╚══██╔══╝╚██╗ ██╔╝
+// ██████╔╝██████╔╝██║   ██║██████╔╝█████╗  ██████╔╝   ██║    ╚████╔╝ 
+// ██╔═══╝ ██╔══██╗██║   ██║██╔═══╝ ██╔══╝  ██╔══██╗   ██║     ╚██╔╝  
+// ██║     ██║  ██║╚██████╔╝██║     ███████╗██║  ██║   ██║      ██║   
+// ╚═╝     ╚═╝  ╚═╝ ╚═════╝ ╚═╝     ╚══════╝╚═╝  ╚═╝   ╚═╝      ╚═╝   
+describe("has().property()", function() {
+
+  it('returns correct result', function() {
+
+    var fun = 'property';
+
+    var obj = {a: 0, b: 1, c: 2},
+        arr = [0, 1, 2];
+
+    // Checks if object has OWN PROPERTY
+    should.equal(  true, ont.has( obj )[fun]( 'a' ) );
+    should.equal(  true, ont.has( obj )[fun]( 'b' ) );
+    should.equal(  true, ont.has( obj )[fun]( 'c' ) );
+    should.equal( false, ont.has( obj )[fun]( 'd' ) );
+    should.equal( false, ont.has( obj )[fun]( 'length' ) );
+    should.equal( false, ont.has( obj )[fun]( 'prototype' ) );
+
+    should.equal( false, ont.has( arr )[fun]( 'a' ) );
+    should.equal( false, ont.has( arr )[fun]( 'b' ) );
+    should.equal( false, ont.has( arr )[fun]( 'c' ) );
+    should.equal( false, ont.has( arr )[fun]( 'd' ) );
+    should.equal(  true, ont.has( arr )[fun]( 'length' ) );
+    should.equal( false, ont.has( arr )[fun]( 'prototype' ) );
+    should.equal( false, ont.has( arr )[fun]( 'push' ) );
+
+  });
+
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// ██╗  ██╗ █████╗ ██╗   ██╗███████╗
+// ██║  ██║██╔══██╗██║   ██║██╔════╝
+// ███████║███████║██║   ██║█████╗  
+// ██╔══██║██╔══██║╚██╗ ██╔╝██╔══╝  
+// ██║  ██║██║  ██║ ╚████╔╝ ███████╗
+// ╚═╝  ╚═╝╚═╝  ╚═╝  ╚═══╝  ╚══════╝
+
+
+// ██████╗ ██████╗  ██████╗ ██████╗ ███████╗██████╗ ████████╗██╗   ██╗
+// ██╔══██╗██╔══██╗██╔═══██╗██╔══██╗██╔════╝██╔══██╗╚══██╔══╝╚██╗ ██╔╝
+// ██████╔╝██████╔╝██║   ██║██████╔╝█████╗  ██████╔╝   ██║    ╚████╔╝ 
+// ██╔═══╝ ██╔══██╗██║   ██║██╔═══╝ ██╔══╝  ██╔══██╗   ██║     ╚██╔╝  
+// ██║     ██║  ██║╚██████╔╝██║     ███████╗██║  ██║   ██║      ██║   
+// ╚═╝     ╚═╝  ╚═╝ ╚═════╝ ╚═╝     ╚══════╝╚═╝  ╚═╝   ╚═╝      ╚═╝   
+describe("have().property()", function() {
+
+  it('returns correct result', function() {
+
+    var fun = 'property';
+
+    var obj1 = {a: 0, b: 1, c: 2},
+        obj2 = {a: 5, d: 6, e: 7},
+        arr1 = [0, 1, 2],
+        arr2 = [5, 6, 7];
+
+    // Checks if EACH OBJECT has the passed own property
+    should.equal(  true, ont.have( [ obj1, obj2 ] )[fun]( 'a' ) );
+    should.equal( false, ont.have( [ obj1, obj2 ] )[fun]( 'b' ) );
+
+    should.equal( false, ont.have( [ arr1, arr2 ] )[fun]( 'a' ) );
+    should.equal(  true, ont.have( [ arr1, arr2 ] )[fun]( 'length' ) );
+
+    should.equal( false, ont.have( [ arr1, obj1 ] )[fun]( 'length' ) );
 
   });
 

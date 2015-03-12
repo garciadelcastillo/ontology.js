@@ -50,8 +50,8 @@ is({a: 5, c: true})
 
 
 // Generic type checks for arrays of objects
-are([-1, 1]).types('number');         // true
-are([true, 'foo']).types('string');   // false
+are([-1, 1]).type('number');         // true
+are([true, 'foo']).type('string');   // false
 
 // Primitive type checks for arrays of objects
 are([true, 'foo']).primitives();        // true
