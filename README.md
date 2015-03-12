@@ -3,6 +3,8 @@
 
 **ontology.js** is a mighty, yet lightweight library to inquire about the ''nature of being'' in JavaScript objects. It provides a clean API of chained lexical methods for data type checks, property checks and equality comparators.
 
+Download the latest stable version from [the distribution folder](https://github.com/garciadelcastillo/ontology.js/tree/master/dist). Feel free to add feature requests [to the wishlist](https://github.com/garciadelcastillo/ontology.js/issues/1).
+
 Usage
 -----
 

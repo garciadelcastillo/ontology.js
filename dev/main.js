@@ -1,3 +1,7 @@
+/**
+ * This is an internal test bench for development work
+ */
+
 // Generic type check, passing data type as string representation
 is(null).type('null');                // true
 is(undefined).type('undefined');      // true

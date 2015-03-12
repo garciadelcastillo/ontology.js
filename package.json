@@ -1,7 +1,7 @@
 {
   "name": "ontology",
   "casedName": "Ontology",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "author": "Jose Luis Garcia del Castillo",
   "description": "A tiny, yet mighty library to inquire about the nature of being in JavaScript objects",
   "repository": {
