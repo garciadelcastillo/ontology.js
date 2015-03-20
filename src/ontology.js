@@ -1,3 +1,6 @@
+// Ontology.js 0.2.0
+// https://github.com/garciadelcastillo/ontology.js
+// (c) 2015 Jose Luis García del Castillo y López
 
 
 // ██╗███████╗
@@ -736,6 +739,53 @@ var have = function(objs) {
 
 
     return _have;
+};
+
+
+
+
+
+// ██╗    ██╗██╗  ██╗ █████╗ ████████╗
+// ██║    ██║██║  ██║██╔══██╗╚══██╔══╝
+// ██║ █╗ ██║███████║███████║   ██║   
+// ██║███╗██║██╔══██║██╔══██║   ██║   
+// ╚███╔███╔╝██║  ██║██║  ██║   ██║   
+//  ╚══╝╚══╝ ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   
+                                   
+var what = function(obj) {
+
+    // Sanity
+    if (arguments.length != 1) {
+        console.warn('Ontology.js: invalid arguments for what()');
+        return undefined;
+    };
+
+    // Private properties
+    var _what = {};
+    _what.arg = obj;
+    var len = obj.length;
+
+    var typesMap = {
+        'null': 'nullObj',
+        'undefined': 'undefinedObj',
+        'nan': 'NaNObj',
+        'boolean': 'boolean',
+        'number': 'number',
+        'function': 'function',
+        'string': 'string',
+        'array': 'array',
+        'object': 'object'
+    };
+
+    _what.type = function() {
+        for (var typ in typesMap) {
+            if (is(this.arg).type(typ)) return typ;
+        }
+        console.warn('Ontology.js: object type is not recognized');
+        return false;
+    };
+
+    return _what;
 };
 
 

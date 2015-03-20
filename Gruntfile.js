@@ -31,7 +31,13 @@ module.exports = function(grunt) {
         files: {
           'dist/<%= pkg.name %>-<%= pkg.version %>.min.js': ['dist/<%= pkg.name %>-<%= pkg.version %>.js']
         }
+      },
+      minsrc: {
+        files: {
+          'src/<%= pkg.name %>.min.js': ['src/<%= pkg.name %>.js']
+        }
       }
+
     },
 
     mochaTest: {
@@ -54,5 +60,6 @@ module.exports = function(grunt) {
   grunt.registerTask('default', build_steps );
   grunt.registerTask('build', build_steps);
   grunt.registerTask('test', ['concat:test', 'mochaTest']);
+  grunt.registerTask('minsrc', ['uglify:minsrc']);  // a task to minify the in-development source
 
 };

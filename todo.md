@@ -21,3 +21,14 @@
     areValues.equal(comp);
 ```
 
+- Make 'not' methods such as notOfType(), notEqual() available trough a 'not' chained namespace such as:
+    is().not.type()
+    are().not.equal()
+
+- Add a **find()** accessor to fetch characteristic properties in iterable objects:
+    find(arr).largest();            // returns an array with the object that evaluates to absolute >
+    find(obj).smallest();           // returns an object with the property whose value evaluates to abs <
+    find(arr).greaterThan(_value);  // returns an array with the objects matching > _value
+    find(obj).lessThan(_value);     // returns an object with the properies whose value < _value
+    find(obj).equal(_value);        // returns an object with the properties where value == _value
+

@@ -1,7 +1,15 @@
+/**
+ * TESTS TO IMPLEMENT
+ *     what().type()
+ */
+
+
+
+
+
+
 var should = require('should'), 
     ont = require('../test/ontology.js');
-
-
 
 
 
