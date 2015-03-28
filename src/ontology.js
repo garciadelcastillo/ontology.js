@@ -763,7 +763,6 @@ var what = function(obj) {
     // Private properties
     var _what = {};
     _what.arg = obj;
-    var len = obj.length;
 
     var typesMap = {
         'null': 'nullObj',
