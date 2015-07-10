@@ -1,3 +1,5 @@
+![Ontology.js | Inquiring the nature of being in JavaScript](https://github.com/garciadelcastillo/ontology.js/blob/master/assets/ontologyjs-banner-alternate-728.jpg "Ontology.js | Inquiring the nature of being in JavaScript")
+
 # ontology.js
 
 **ontology.js** is a mighty, yet lightweight library to inquire about the ''nature of being'' in JavaScript objects. It provides a clean API of chained lexical methods for data type checks, property checks and equality comparators.
